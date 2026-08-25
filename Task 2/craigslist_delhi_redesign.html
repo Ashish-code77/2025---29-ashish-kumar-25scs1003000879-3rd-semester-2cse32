@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Craigslist Delhi — UX Redesign Case Study</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --teal-900:#0F2C33;
+    --teal-700:#16424D;
+    --teal-600:#1D5866;
+    --mustard-500:#E8A33D;
+    --mustard-600:#CF8B26;
+    --terracotta-500:#B5502A;
+    --terracotta-600:#983E1F;
+    --olive-500:#7C8A4A;
+    --plum-500:#6B4A6B;
+    --sand-50:#FBF8F2;
+    --sand-100:#F2EDE1;
+    --sand-200:#E7DFCC;
+    --line:#D8CEB8;
+    --ink-900:#1E2A28;
+    --ink-600:#51605C;
+    --ink-400:#7C8985;
+    --success:#3F7D5C;
+    --error:#B23A3A;
+    --radius:10px;
+    --font-display:'Baloo 2', sans-serif;
+    --font-body:'Inter', sans-serif;
+    --font-mono:'IBM Plex Mono', monospace;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:var(--font-body);background:var(--sand-100);color:var(--ink-900);}
+  .app{max-width:1180px;margin:0 auto;padding:0 0 80px;}
+
+  /* ---------- top case-study nav ---------- */
+  .case-nav{position:sticky;top:0;z-index:50;background:var(--teal-900);border-bottom:3px solid var(--ink-900);}
+  .case-nav-inner{max-width:1180px;margin:0 auto;display:flex;align-items:center;gap:6px;padding:14px 20px;flex-wrap:wrap;}
+  .case-title{font-family:var(--font-display);color:var(--sand-50);font-weight:700;font-size:18px;margin-right:auto;letter-spacing:.2px;}
+  .case-title span{color:var(--mustard-500);}
+  .tab-btn{font-family:var(--font-body);font-weight:600;font-size:13.5px;color:var(--sand-100);background:transparent;border:2px solid transparent;padding:8px 14px;border-radius:8px;cursor:pointer;transition:.15s;}
+  .tab-btn:hover{background:rgba(255,255,255,.08);}
+  .tab-btn.active{background:var(--mustard-500);color:var(--ink-900);border-color:var(--ink-900);}
+
+  .panel{display:none;padding:40px 20px 0;}
+  .panel.active{display:block;}
+
+  h2.section-head{font-family:var(--font-display);font-size:30px;font-weight:700;margin:0 0 6px;}
+  p.section-sub{color:var(--ink-600);font-size:15px;margin:0 0 32px;max-width:680px;line-height:1.55;}
+
+  /* ---------- heuristic table ---------- */
+  .heur-card{background:var(--sand-50);border:2px solid var(--ink-900);border-radius:var(--radius);box-shadow:5px 5px 0 var(--line);padding:22px 24px;margin-bottom:20px;}
+  .heur-top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap;}
+  .heur-name{font-family:var(--font-display);font-weight:700;font-size:17px;}
+  .sev{font-family:var(--font-mono);font-size:11.5px;font-weight:500;padding:4px 10px;border-radius:20px;white-space:nowrap;height:fit-content;}
+  .sev-3{background:#F6E0D6;color:var(--terracotta-600);}
+  .sev-2{background:#FBEBD0;color:var(--mustard-600);}
+  .sev-1{background:#E4E9DA;color:var(--olive-500);}
+  .heur-body{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:14px;}
+  .heur-label{font-family:var(--font-mono);font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-400);margin-bottom:4px;}
+  .heur-text{font-size:14px;line-height:1.55;color:var(--ink-900);}
+  @media(max-width:720px){.heur-body{grid-template-columns:1fr;}}
+
+  /* ---------- mood board ---------- */
+  .mood-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:28px;}
+  @media(max-width:820px){.mood-grid{grid-template-columns:1fr;}}
+  .swatch-row{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:32px;}
+  .swatch{border:2px solid var(--ink-900);border-radius:8px;overflow:hidden;box-shadow:4px 4px 0 var(--line);}
+  .swatch-color{height:80px;}
+  .swatch-info{background:var(--sand-50);padding:8px 10px;}
+  .swatch-name{font-size:12px;font-weight:600;}
+  .swatch-hex{font-family:var(--font-mono);font-size:11px;color:var(--ink-600);}
+  .type-sample{background:var(--sand-50);border:2px solid var(--ink-900);border-radius:var(--radius);box-shadow:5px 5px 0 var(--line);padding:24px;margin-bottom:20px;}
+  .type-sample .disp{font-family:var(--font-display);font-size:34px;font-weight:700;margin:0 0 4px;}
+  .type-sample .body-ex{font-size:15px;color:var(--ink-600);margin:0 0 6px;}
+  .type-sample .mono-ex{font-family:var(--font-mono);font-size:13px;color:var(--terracotta-600);}
+  .mood-word{display:inline-block;font-family:var(--font-mono);font-size:12px;background:var(--teal-900);color:var(--sand-50);padding:6px 12px;border-radius:20px;margin:0 6px 8px 0;}
+  .texture-card{border:2px solid var(--ink-900);border-radius:var(--radius);box-shadow:5px 5px 0 var(--line);padding:22px;background:repeating-linear-gradient(135deg,var(--sand-50),var(--sand-50) 10px,#f4ecdb 10px,#f4ecdb 20px);}
+  .texture-card h4{font-family:var(--font-display);margin:0 0 8px;font-size:16px;}
+  .texture-card p{font-size:13.5px;color:var(--ink-600);line-height:1.6;margin:0;}
+
+  /* ---------- style guide ---------- */
+  .sg-block{background:var(--sand-50);border:2px solid var(--ink-900);border-radius:var(--radius);box-shadow:5px 5px 0 var(--line);padding:24px;margin-bottom:24px;}
+  .sg-block h3{font-family:var(--font-display);font-size:18px;margin:0 0 16px;}
+  .type-scale-row{display:flex;align-items:baseline;gap:16px;padding:10px 0;border-bottom:1px solid var(--sand-200);}
+  .type-scale-row:last-child{border-bottom:none;}
+  .type-scale-row .label{font-family:var(--font-mono);font-size:11px;color:var(--ink-400);width:110px;flex-shrink:0;}
+  .type-scale-row .sample{font-family:var(--font-display);font-weight:700;}
+  .space-row{display:flex;align-items:center;gap:14px;margin-bottom:10px;}
+  .space-box{background:var(--mustard-500);border:2px solid var(--ink-900);}
+  .space-label{font-family:var(--font-mono);font-size:12px;color:var(--ink-600);}
+  .btn-demo{display:flex;gap:14px;flex-wrap:wrap;}
+  .btn{font-family:var(--font-body);font-weight:700;font-size:14px;padding:11px 22px;border-radius:8px;border:2px solid var(--ink-900);cursor:pointer;}
+  .btn-primary{background:var(--mustard-500);color:var(--ink-900);box-shadow:4px 4px 0 var(--ink-900);}
+  .btn-secondary{background:var(--sand-50);color:var(--ink-900);box-shadow:4px 4px 0 var(--ink-900);}
+  .btn-outline{background:transparent;color:var(--teal-900);box-shadow:none;}
+  .tag-demo{display:flex;gap:10px;flex-wrap:wrap;}
+  .tag{font-family:var(--font-mono);font-size:12px;font-weight:500;color:#fff;padding:6px 14px;border-radius:20px;border:2px solid var(--ink-900);}
+
+  /* ---------- mockup ---------- */
+  .mock-toggle{display:flex;gap:10px;margin-bottom:24px;}
+  .mock-toggle button{font-family:var(--font-body);font-weight:700;font-size:13px;padding:9px 18px;border-radius:8px;border:2px solid var(--ink-900);background:var(--sand-50);cursor:pointer;}
+  .mock-toggle button.active{background:var(--teal-900);color:var(--sand-50);}
+
+  /* desktop mock */
+  .device-desktop{border:2px solid var(--ink-900);border-radius:14px;box-shadow:8px 8px 0 var(--line);overflow:hidden;background:var(--sand-50);}
+  .site-nav{background:var(--teal-900);padding:14px 28px;display:flex;align-items:center;gap:20px;}
+  .site-logo{font-family:var(--font-display);color:var(--sand-50);font-weight:800;font-size:20px;flex-shrink:0;}
+  .site-logo span{color:var(--mustard-500);}
+  .site-loc{font-family:var(--font-mono);font-size:12px;color:var(--sand-100);background:rgba(255,255,255,.08);padding:6px 12px;border-radius:20px;flex-shrink:0;}
+  .site-search{flex:1;display:flex;background:var(--sand-50);border-radius:8px;overflow:hidden;border:2px solid var(--ink-900);}
+  .site-search input{border:none;outline:none;flex:1;padding:10px 14px;font-family:var(--font-body);font-size:13.5px;}
+  .site-search button{border:none;background:var(--mustard-500);padding:0 18px;font-weight:700;font-size:13px;cursor:pointer;}
+  .site-post{font-family:var(--font-body);font-weight:700;font-size:13px;background:var(--terracotta-500);color:#fff;padding:10px 18px;border-radius:8px;border:2px solid var(--ink-900);white-space:nowrap;cursor:pointer;}
+
+  .hero{padding:34px 28px 18px;}
+  .hero h1{font-family:var(--font-display);font-size:30px;margin:0 0 6px;}
+  .hero p{color:var(--ink-600);font-size:14.5px;margin:0 0 18px;}
+  .chip-row{display:flex;gap:10px;flex-wrap:wrap;}
+  .chip{font-family:var(--font-mono);font-size:12px;background:var(--sand-100);border:2px solid var(--ink-900);padding:6px 14px;border-radius:20px;}
+
+  .cat-section{padding:10px 28px 30px;}
+  .cat-title{font-family:var(--font-display);font-size:18px;margin:0 0 14px;}
+  .cat-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;}
+  .cat-card{border:2px solid var(--ink-900);border-radius:12px;padding:16px 14px;color:#fff;box-shadow:5px 5px 0 var(--ink-900);position:relative;}
+  .cat-card:nth-child(1){background:var(--terracotta-500);transform:rotate(-1deg);}
+  .cat-card:nth-child(2){background:var(--teal-600);transform:rotate(.7deg);}
+  .cat-card:nth-child(3){background:var(--mustard-600);transform:rotate(-.5deg);}
+  .cat-card:nth-child(4){background:var(--olive-500);transform:rotate(1deg);}
+  .cat-card:nth-child(5){background:var(--plum-500);transform:rotate(-.8deg);}
+  .cat-card .icon{font-size:26px;margin-bottom:8px;display:block;}
+  .cat-card .name{font-family:var(--font-display);font-weight:700;font-size:15px;margin-bottom:2px;}
+  .cat-card .count{font-family:var(--font-mono);font-size:11px;opacity:.85;}
+
+  .listing-section{padding:10px 28px 34px;}
+  .listing-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;}
+  .listing-card{background:var(--sand-50);border:2px solid var(--ink-900);border-radius:10px;overflow:hidden;box-shadow:4px 4px 0 var(--line);}
+  .listing-img{height:90px;display:flex;align-items:center;justify-content:center;font-size:26px;color:#fff;}
+  .listing-body{padding:12px 14px;}
+  .listing-price{font-family:var(--font-mono);font-weight:600;font-size:14px;color:var(--terracotta-600);}
+  .listing-title{font-size:13px;font-weight:600;margin:4px 0 2px;}
+  .listing-meta{font-family:var(--font-mono);font-size:10.5px;color:var(--ink-400);}
+
+  .site-footer{background:var(--teal-900);color:var(--sand-100);padding:22px 28px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:12px;font-family:var(--font-body);}
+  .site-footer a{color:var(--sand-100);}
+
+  /* mobile frame */
+  .device-mobile{width:340px;margin:0 auto;border:2px solid var(--ink-900);border-radius:26px;box-shadow:8px 8px 0 var(--line);overflow:hidden;background:var(--sand-50);}
+  .m-nav{background:var(--teal-900);padding:14px 16px;display:flex;align-items:center;justify-content:space-between;}
+  .m-search{margin:14px 16px 0;display:flex;border:2px solid var(--ink-900);border-radius:8px;overflow:hidden;}
+  .m-search input{border:none;flex:1;padding:10px;font-size:13px;font-family:var(--font-body);}
+  .m-search button{border:none;background:var(--mustard-500);padding:0 14px;font-weight:700;}
+  .m-hero{padding:16px;}
+  .m-hero h1{font-family:var(--font-display);font-size:22px;margin:0 0 4px;}
+  .m-hero p{font-size:13px;color:var(--ink-600);margin:0;}
+  .m-cat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:6px 16px 16px;}
+  .m-cat-card{border:2px solid var(--ink-900);border-radius:10px;padding:12px;color:#fff;box-shadow:3px 3px 0 var(--ink-900);}
+  .m-listing{padding:0 16px 16px;display:flex;flex-direction:column;gap:10px;}
+  .m-listing-card{display:flex;gap:10px;background:var(--sand-50);border:2px solid var(--ink-900);border-radius:10px;overflow:hidden;box-shadow:3px 3px 0 var(--line);}
+  .m-listing-img{width:70px;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px;}
+  .m-listing-body{padding:8px 10px;}
+  .m-tabbar{display:flex;justify-content:space-around;background:var(--sand-50);border-top:2px solid var(--ink-900);padding:10px 0;}
+  .m-tab{font-size:10px;font-family:var(--font-mono);text-align:center;color:var(--ink-600);}
+  .m-tab.active{color:var(--terracotta-600);font-weight:700;}
+  .m-tab .ico{font-size:17px;display:block;margin-bottom:2px;}
+
+  @media(max-width:900px){
+    .cat-grid{grid-template-columns:repeat(3,1fr);}
+    .listing-grid{grid-template-columns:repeat(2,1fr);}
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="case-nav">
+    <div class="case-nav-inner">
+      <div class="case-title">craigslist delhi <span>→ redesign</span></div>
+      <button class="tab-btn active" data-tab="heur">Heuristic Evaluation</button>
+      <button class="tab-btn" data-tab="mood">Mood Board</button>
+      <button class="tab-btn" data-tab="style">Style Guide</button>
+      <button class="tab-btn" data-tab="mock">Mockups</button>
+    </div>
+  </div>
+
+  <!-- ============ HEURISTIC EVALUATION ============ -->
+  <div class="panel active" id="heur">
+    <h2 class="section-head">Heuristic Evaluation</h2>
+    <p class="section-sub">Evaluated against Nielsen's 10 usability heuristics, based on the craigslist.org/area/delhi homepage. Severity: 3 = major, 2 = moderate, 1 = minor.</p>
+
+    <div class="heur-card">
+      <div class="heur-top"><div class="heur-name">1 · Visibility of System Status</div><div class="sev sev-2">Severity 2</div></div>
+      <div class="heur-body">
+        <div><div class="heur-label">Issue</div><div class="heur-text">No timestamps, "new listings" counts, or activity indicators on the homepage — a user can't tell if the board is active or stale.</div></div>
+        <div><div class="heur-label">Recommendation</div><div class="heur-text">Surface a live "X new today" count per category and relative timestamps on any listing preview.</div></div>
+      </div>
+    </div>
+
+    <div class="heur-card">
+      <div class="heur-top"><div class="heur-name">2 · Match Between System &amp; Real World</div><div class="sev sev-3">Severity 3</div></div>
+      <div class="heur-body">
+        <div><div class="heur-label">Issue</div><div class="heur-text">Category labels use insider shorthand ("atv/utv/sno", "sm biz ads", "w2w") that a first-time or non-native-English visitor in Delhi won't parse.</div></div>
+        <div><div class="heur-label">Recommendation</div><div class="heur-text">Replace abbreviations with plain-language labels and icons; group into a handful of recognizable top-level categories.</div></div>
+      </div>
+    </div>
+
+    <div class="heur-card">
+      <div class="heur-top"><div class="heur-name">3 · User Control &amp; Freedom</div><div class="sev sev-2">Severity 2</div></div>
+      <div class="heur-body">
+        <div><div class="heur-label">Issue</div><div class="heur-text">No visible way to change city, undo a filter, or return to the homepage without using the browser back button.</div></div>
+        <div><div class="heur-label">Recommendation</div><div class="heur-text">Persistent nav with logo-as-home, an explicit city switcher, and breadcrumbs on category pages.</div></div>
+      </div>
+    </div>
+
+    <div class="heur-card">
+      <div class="heur-top"><div class="heur-name">4 · Consistency &amp; Standards</div><div class="sev sev-2">Severity 2</div></div>
+      <div class="heur-body">
+        <div><div class="heur-label">Issue</div><div class="heur-text">Every link — navigation, category, and primary action — is styled identically (same blue, same weight), so nothing signals importance.</div></div>
+        <div><div class="heur-label">Recommendation</div><div class="heur-text">Establish a real hierarchy: filled buttons for actions, tinted cards for categories, plain text for tertiary links.</div></div>
+      </div>
+    </div>
+
+    <div class="heur-card">
+      <div class="heur-top"><div class="heur-name">5 · Error Prevention</div><div class="sev sev-1">Severity 1</div></div>
+      <div class="heur-body">
+        <div><div class="heur-label">Issue</div><div class="heur-text">"post an ad" gives no preview of what's required before a user commits to the flow, risking abandoned drafts.</div></div>
+        <div><div class="heur-label">Recommendation</div><div class="heur-text">Show a short "what you'll need" checklist (photos, price, location) before entering the posting flow.</div></div>
+      </div>
+    </div>
+
+    <div class="heur-card">
+      <div class="heur-top"><div class="heur-name">6 · Recognition Rather Than Recall</div><div class="sev sev-3">Severity 3</div></div>
+      <div class="heur-body">
+        <div><div class="heur-label">Issue</div><div class="heur-text">Roughly 100 text links compete for attention with no icons, images, or grouping cues — users must read and remember, not recognize.</div></div>
+        <div><div class="heur-label">Recommendation</div><div class="heur-text">Use icon + color-coded category tiles and thumbnail images on listing previews so scanning replaces reading.</div></div>
+      </div>
+    </div>
+
+    <div class="heur-card">
+      <div class="heur-top"><div class="heur-name">7 · Flexibility &amp; Efficiency of Use</div><div class="sev sev-2">Severity 2</div></div>
+      <div class="heur-body">
+        <div><div class="heur-label">Issue</div><div class="heur-text">No saved searches, filters, or recently viewed shortcuts for returning users — every visit starts from zero.</div></div>
+        <div><div class="heur-label">Recommendation</div><div class="heur-text">Add quick-filter chips (price, category, distance) and a "recently viewed" row for logged-in users.</div></div>
+      </div>
+    </div>
+
+    <div class="heur-card">
+      <div class="heur-top"><div class="heur-name">8 · Aesthetic &amp; Minimalist Design</div><div class="sev sev-3">Severity 3</div></div>
+      <div class="heur-body">
+        <div><div class="heur-label">Issue</div><div class="heur-text">The page is a dense wall of same-weight text with almost no whitespace, imagery, or visual grouping — cognitively heavy to scan.</div></div>
+        <div><div class="heur-label">Recommendation</div><div class="heur-text">Introduce whitespace, a clear grid, and a small set of top categories above the fold, with the long tail one click away.</div></div>
+      </div>
+    </div>
+
+    <div class="heur-card">
+      <div class="heur-top"><div class="heur-name">9 · Help Users Recognize &amp; Recover from Errors</div><div class="sev sev-1">Severity 1</div></div>
+      <div class="heur-body">
+        <div><div class="heur-label">Issue</div><div class="heur-text">No visible empty-state or error messaging patterns on the homepage to evaluate against, which itself signals this hasn't been designed for.</div></div>
+        <div><div class="heur-label">Recommendation</div><div class="heur-text">Design explicit empty/error states (no results, expired listing) that explain what happened and offer a next step.</div></div>
+      </div>
+    </div>
+
+    <div class="heur-card">
+      <div class="heur-top"><div class="heur-name">10 · Help &amp; Documentation</div><div class="sev sev-2">Severity 2</div></div>
+      <div class="heur-body">
+        <div><div class="heur-label">Issue</div><div class="heur-text">"avoid scams &amp; fraud" and "personal safety tips" are buried as small low-contrast links at the page bottom, despite being high-value trust content.</div></div>
+        <div><div class="heur-label">Recommendation</div><div class="heur-text">Promote safety/help content into the footer as a clearly labeled group, and link it contextually from the post-ad flow.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ MOOD BOARD ============ -->
+  <div class="panel" id="mood">
+    <h2 class="section-head">Mood Board</h2>
+    <p class="section-sub">Direction: "hand-painted market signage." Delhi's local markets — Chandni Chowk, Lajpat Nagar — communicate through bold flat-color signboards with thick outlines and hard shadows, not glossy tech gradients. That vernacular gives the redesign warmth and locality while staying legible and modern.</p>
+
+    <div class="swatch-row">
+      <div class="swatch"><div class="swatch-color" style="background:var(--teal-900)"></div><div class="swatch-info"><div class="swatch-name">Ink Teal</div><div class="swatch-hex">#0F2C33</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:var(--mustard-500)"></div><div class="swatch-info"><div class="swatch-name">Turmeric</div><div class="swatch-hex">#E8A33D</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:var(--terracotta-500)"></div><div class="swatch-info"><div class="swatch-name">Brick</div><div class="swatch-hex">#B5502A</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:var(--olive-500)"></div><div class="swatch-info"><div class="swatch-name">Olive</div><div class="swatch-hex">#7C8A4A</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:var(--sand-100)"></div><div class="swatch-info"><div class="swatch-name">Paper Sand</div><div class="swatch-hex">#F2EDE1</div></div></div>
+    </div>
+
+    <div class="mood-grid">
+      <div>
+        <div class="type-sample">
+          <div class="disp">Housing, Jobs &amp; more — near you</div>
+          <div class="body-ex">Body copy in Inter keeps dense listing content quiet and legible against the bold display headlines.</div>
+          <div class="mono-ex">₹18,500 · 2BHK · Vasant Kunj</div>
+        </div>
+        <div class="texture-card">
+          <h4>Signature: painted signboard cards</h4>
+          <p>Every card — category tile, listing, button — gets a 2px ink border and a hard (non-blurred) offset shadow, with a slight rotation on category tiles. It reads as physical, propped-up signage rather than a flat screen element, echoing real market stalls.</p>
+        </div>
+      </div>
+      <div>
+        <div class="sg-block" style="margin-bottom:20px;">
+          <h3>Tone of voice</h3>
+          <span class="mood-word">plain-spoken</span><span class="mood-word">local</span><span class="mood-word">warm</span><span class="mood-word">trustworthy</span><span class="mood-word">unpretentious</span><span class="mood-word">direct</span>
+        </div>
+        <div class="sg-block">
+          <h3>Imagery direction</h3>
+          <p style="font-size:13.5px;color:var(--ink-600);line-height:1.6;margin:0;">Flat, geometric icon illustrations (not photography) for categories — a sofa for housing, a briefcase for jobs, a wrench for services — colored from the accent palette, keeping the board fast-loading and consistent even where sellers haven't added photos yet.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ STYLE GUIDE ============ -->
+  <div class="panel" id="style">
+    <h2 class="section-head">Style Guide</h2>
+    <p class="section-sub">Tokens and components carried through every screen of the redesign.</p>
+
+    <div class="sg-block">
+      <h3>Typography</h3>
+      <div class="type-scale-row"><div class="label">Display / H1</div><div class="sample" style="font-size:32px;">Find it near you</div></div>
+      <div class="type-scale-row"><div class="label">Display / H2</div><div class="sample" style="font-size:24px;">Housing</div></div>
+      <div class="type-scale-row"><div class="label">Display / H3</div><div class="sample" style="font-size:18px;">2BHK in Vasant Kunj</div></div>
+      <div class="type-scale-row"><div class="label">Body / Inter</div><div class="sample" style="font-family:var(--font-body);font-weight:400;font-size:15px;">Fully furnished, near metro, available from next month.</div></div>
+      <div class="type-scale-row"><div class="label">Caption</div><div class="sample" style="font-family:var(--font-body);font-weight:500;font-size:12px;color:var(--ink-600);">Posted 2 hours ago · Vasant Kunj</div></div>
+      <div class="type-scale-row"><div class="label">Mono / meta</div><div class="sample" style="font-family:var(--font-mono);font-weight:400;font-size:13px;">₹18,500 / month</div></div>
+    </div>
+
+    <div class="sg-block">
+      <h3>Spacing scale</h3>
+      <div class="space-row"><div class="space-box" style="width:4px;height:16px;"></div><span class="space-label">4 — micro (icon-to-label gap)</span></div>
+      <div class="space-row"><div class="space-box" style="width:8px;height:16px;"></div><span class="space-label">8 — tight (chip padding)</span></div>
+      <div class="space-row"><div class="space-box" style="width:16px;height:16px;"></div><span class="space-label">16 — default (card padding)</span></div>
+      <div class="space-row"><div class="space-box" style="width:24px;height:16px;"></div><span class="space-label">24 — section gap</span></div>
+      <div class="space-row"><div class="space-box" style="width:48px;height:16px;"></div><span class="space-label">48 — block gap between page sections</span></div>
+    </div>
+
+    <div class="sg-block">
+      <h3>Buttons</h3>
+      <div class="btn-demo">
+        <button class="btn btn-primary">Post an ad</button>
+        <button class="btn btn-secondary">Save search</button>
+        <button class="btn btn-outline">See all listings →</button>
+      </div>
+    </div>
+
+    <div class="sg-block">
+      <h3>Category tags</h3>
+      <div class="tag-demo">
+        <span class="tag" style="background:var(--terracotta-500);">Housing</span>
+        <span class="tag" style="background:var(--teal-600);">Jobs</span>
+        <span class="tag" style="background:var(--mustard-600);">For Sale</span>
+        <span class="tag" style="background:var(--olive-500);">Services</span>
+        <span class="tag" style="background:var(--plum-500);">Community</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ MOCKUPS ============ -->
+  <div class="panel" id="mock">
+    <h2 class="section-head">High-Fidelity Mockup</h2>
+    <p class="section-sub">Homepage redesign — search-first, five recognizable categories above the fold, and image-led listing previews in place of dense text lists.</p>
+
+    <div class="mock-toggle">
+      <button class="active" data-mock="desktop">Desktop</button>
+      <button data-mock="mobile">Mobile</button>
+    </div>
+
+    <!-- DESKTOP -->
+    <div id="mock-desktop">
+      <div class="device-desktop">
+        <div class="site-nav">
+          <div class="site-logo">craigslist<span>.</span></div>
+          <div class="site-loc">📍 Delhi ▾</div>
+          <div class="site-search"><input placeholder="Search apartments, jobs, furniture…"><button>Search</button></div>
+          <div class="site-post">+ Post an ad</div>
+        </div>
+        <div class="hero">
+          <h1>Find it near you, today</h1>
+          <p>1,240 new listings in Delhi this week</p>
+          <div class="chip-row">
+            <span class="chip">Under ₹20,000</span><span class="chip">Near me</span><span class="chip">Posted today</span><span class="chip">With photos</span>
+          </div>
+        </div>
+        <div class="cat-section">
+          <h3 class="cat-title">Browse categories</h3>
+          <div class="cat-grid">
+            <div class="cat-card"><span class="icon">🏠</span><div class="name">Housing</div><div class="count">4,120 listings</div></div>
+            <div class="cat-card"><span class="icon">💼</span><div class="name">Jobs</div><div class="count">2,860 listings</div></div>
+            <div class="cat-card"><span class="icon">🛋️</span><div class="name">For Sale</div><div class="count">6,510 listings</div></div>
+            <div class="cat-card"><span class="icon">🔧</span><div class="name">Services</div><div class="count">1,940 listings</div></div>
+            <div class="cat-card"><span class="icon">👥</span><div class="name">Community</div><div class="count">870 listings</div></div>
+          </div>
+        </div>
+        <div class="listing-section">
+          <h3 class="cat-title">Trending near Delhi</h3>
+          <div class="listing-grid">
+            <div class="listing-card"><div class="listing-img" style="background:var(--terracotta-500);">🛋️</div><div class="listing-body"><div class="listing-price">₹6,500</div><div class="listing-title">Sofa set, 3-seater</div><div class="listing-meta">2h ago · Dwarka</div></div></div>
+            <div class="listing-card"><div class="listing-img" style="background:var(--teal-600);">🏠</div><div class="listing-body"><div class="listing-price">₹18,500/mo</div><div class="listing-title">2BHK near metro</div><div class="listing-meta">4h ago · Vasant Kunj</div></div></div>
+            <div class="listing-card"><div class="listing-img" style="background:var(--mustard-600);">💼</div><div class="listing-body"><div class="listing-price">₹35,000/mo</div><div class="listing-title">Front-desk executive</div><div class="listing-meta">1d ago · Saket</div></div></div>
+            <div class="listing-card"><div class="listing-img" style="background:var(--olive-500);">🔧</div><div class="listing-body"><div class="listing-price">₹500 visit</div><div class="listing-title">AC repair &amp; service</div><div class="listing-meta">6h ago · Rohini</div></div></div>
+          </div>
+        </div>
+        <div class="site-footer">
+          <div>© craigslist delhi</div>
+          <div><a href="#">Avoid scams &amp; fraud</a> &nbsp;·&nbsp; <a href="#">Safety tips</a> &nbsp;·&nbsp; <a href="#">Help</a></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MOBILE -->
+    <div id="mock-mobile" style="display:none;">
+      <div class="device-mobile">
+        <div class="m-nav">
+          <div style="color:var(--sand-50);font-family:var(--font-display);font-weight:800;">craigslist</div>
+          <div style="color:var(--sand-100);font-size:18px;">☰</div>
+        </div>
+        <div class="m-search"><input placeholder="Search Delhi…"><button>🔍</button></div>
+        <div class="m-hero"><h1>Find it near you, today</h1><p>1,240 new listings this week</p></div>
+        <div class="m-cat-grid">
+          <div class="m-cat-card" style="background:var(--terracotta-500);">🏠 Housing</div>
+          <div class="m-cat-card" style="background:var(--teal-600);">💼 Jobs</div>
+          <div class="m-cat-card" style="background:var(--mustard-600);">🛋️ For Sale</div>
+          <div class="m-cat-card" style="background:var(--olive-500);">🔧 Services</div>
+        </div>
+        <div class="m-listing">
+          <div class="m-listing-card"><div class="m-listing-img" style="background:var(--terracotta-500);">🛋️</div><div class="m-listing-body"><div class="listing-price">₹6,500</div><div class="listing-title">Sofa set, 3-seater</div><div class="listing-meta">2h ago · Dwarka</div></div></div>
+          <div class="m-listing-card"><div class="m-listing-img" style="background:var(--teal-600);">🏠</div><div class="m-listing-body"><div class="listing-price">₹18,500/mo</div><div class="listing-title">2BHK near metro</div><div class="listing-meta">4h ago · Vasant Kunj</div></div></div>
+        </div>
+        <div class="m-tabbar">
+          <div class="m-tab active"><span class="ico">🏠</span>Home</div>
+          <div class="m-tab"><span class="ico">🔍</span>Search</div>
+          <div class="m-tab"><span class="ico">＋</span>Post</div>
+          <div class="m-tab"><span class="ico">♡</span>Saved</div>
+          <div class="m-tab"><span class="ico">☰</span>Account</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  document.querySelectorAll('.tab-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(btn.dataset.tab).classList.add('active');
+    });
+  });
+  document.querySelectorAll('.mock-toggle button').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      document.querySelectorAll('.mock-toggle button').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('mock-desktop').style.display = btn.dataset.mock==='desktop' ? 'block':'none';
+      document.getElementById('mock-mobile').style.display = btn.dataset.mock==='mobile' ? 'block':'none';
+    });
+  });
+</script>
+</body>
+</html>
